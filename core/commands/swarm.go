@@ -51,6 +51,7 @@ ipfs peers in the internet.
 		"disconnect": swarmDisconnectCmd,
 		"filters":    swarmFiltersCmd,
 		"peers":      swarmPeersCmd,
+		"peering":    swarmPeeringCmd,
 	},
 }
 
@@ -60,6 +61,13 @@ const (
 	swarmLatencyOptionName   = "latency"
 	swarmDirectionOptionName = "direction"
 )
+
+var swarmPeeringCmd = &cmds.Command{
+	Run: func(req *cmds.Request, res cmds.ResponseEmitter, env cmds.Environment) error {
+		fmt.Print("Hello, this is the test for peering\n.")
+		return nil
+	},
+}
 
 var swarmPeersCmd = &cmds.Command{
 	Helptext: cmds.HelpText{
