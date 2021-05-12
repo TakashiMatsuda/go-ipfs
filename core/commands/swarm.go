@@ -63,11 +63,89 @@ const (
 )
 
 var swarmPeeringCmd = &cmds.Command{
+	// Options defines the flags accepted by the command. Flags on specified
+	// on parent commands are inherited by sub commands.
+	// Options []Option
+
+	// Arguments defines the positional arguments for the command. These
+	// arguments can be strings and/or files.
+	//
+	// The rules for valid arguments are as follows:
+	//
+	// 1. No required arguments may follow optional arguments.
+	// 2. There can be at most one STDIN argument.
+	// 3. There can be at most one variadic argument, and it must be last.
+	// Arguments []Argument
+
+	// Encoders encode results from Run (and/or PostRun) in the desired
+	// encoding.
+	//Encoders EncoderMap
+
 	Run: func(req *cmds.Request, res cmds.ResponseEmitter, env cmds.Environment) error {
 		fmt.Print("Hello, this is the test for peering\n.")
 		return nil
 	},
+
+	Helptext: cmds.HelpText{
+		Tagline:          "hogehoge",
+		ShortDescription: ``,
+	},
+
+	// Type describes the type of the output of the Command's Run Function.
+	// In precise terms, the value of Type is an instance of the return type of
+	// the Run Function.
+	//
+	// ie. If command Run returns &Block{}, then Command.Type == &Block{}
+	// Type: error{},
+
+	// Subcommands allow attaching sub commands to a command.
+	//
+	// Note: A command can specify both a Run function and Subcommands. If
+	// invoked with no arguments, or an argument that matches no
+	// sub commands, the Run function of the current command will be invoked.
+	//
+	// Take care when specifying both a Run function and Subcommands. A
+	// simple typo in a sub command will invoke the parent command and may
+	// end up returning a cryptic error to the user.
+	Subcommands: map[string]*cmds.Command{
+		"add": swarmPeeringAddCmd,
+		"rm":  swarmPeeringRmCmd,
+	},
+
+	// NoRemote denotes that a command cannot be executed in a remote environment
+	// NoRemote bool
+
+	// NoLocal denotes that a command cannot be executed in a local environment
+	// NoLocal bool
+
+	// Extra contains a set of other command-specific parameters
+	// Extra *Extra
 }
+
+var swarmPeeringAddCmd = &cmds.Command{
+	Options:   []cmds.Option{},
+	Arguments: []cmds.Argument{},
+	PreRun: func(req *cmds.Request, env cmds.Environment) error {
+		return nil
+	},
+	Run: func(*cmds.Request, cmds.ResponseEmitter, cmds.Environment) error {
+		return nil
+	},
+	PostRun:  map[cmds.PostRunType]func(cmds.Response, cmds.ResponseEmitter) error{},
+	Encoders: map[cmds.EncodingType]cmds.EncoderFunc{},
+	Helptext: cmds.HelpText{
+		Tagline:          "add peering",
+		ShortDescription: "aha~",
+	},
+	External:    false,
+	Type:        nil,
+	Subcommands: map[string]*cmds.Command{},
+	NoRemote:    false,
+	NoLocal:     false,
+	Extra:       &cmds.Extra{},
+}
+
+var swarmPeeringRmCmd = &cmds.Command{}
 
 var swarmPeersCmd = &cmds.Command{
 	Helptext: cmds.HelpText{
