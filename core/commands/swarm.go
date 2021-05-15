@@ -134,8 +134,10 @@ var swarmPeeringAddCmd = &cmds.Command{
 	PostRun:  map[cmds.PostRunType]func(cmds.Response, cmds.ResponseEmitter) error{},
 	Encoders: map[cmds.EncodingType]cmds.EncoderFunc{},
 	Helptext: cmds.HelpText{
-		Tagline:          "add peering",
-		ShortDescription: "aha~",
+		Tagline: "add peering",
+		ShortDescription: `
+		'ipfs swarm peering add' adds peerings.
+		`,
 	},
 	External:    false,
 	Type:        nil,
