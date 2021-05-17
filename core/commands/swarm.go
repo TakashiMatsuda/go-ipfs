@@ -147,7 +147,31 @@ var swarmPeeringAddCmd = &cmds.Command{
 	Extra:       &cmds.Extra{},
 }
 
-var swarmPeeringRmCmd = &cmds.Command{}
+var swarmPeeringRmCmd = &cmds.Command{
+	// Arguments defines the positional arguments for the command. These
+	// arguments can be strings and/or files.
+	//
+	// The rules for valid arguments are as follows:
+	//
+	// 1. No required arguments may follow optional arguments.
+	// 2. There can be at most one STDIN argument.
+	// 3. There can be at most one variadic argument, and it must be last.
+	Arguments: []cmds.Argument{
+		cmds.StringArg("ID", true, true, "IDs of peers to remove"),
+	},
+
+	Run: func(req *cmds.Request, res cmds.ResponseEmitter, env cmds.Environment) error {
+		args := req.Arguments
+		node, err := cmdenv.GetNode(env)
+		if err != nil {
+			return err
+		}
+		for _, v := range args {
+			node.Peering.RemovePeer(peer.ID(v))
+		}
+		return nil
+	},
+}
 
 var swarmPeersCmd = &cmds.Command{
 	Helptext: cmds.HelpText{
